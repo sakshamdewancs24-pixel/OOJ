@@ -6,7 +6,7 @@ class quadratic
 
         int a,b,c,d;
         double r1,r2;
-        System.out.println("\nRishi Kumar Chourasia - 1BF24CS253\n");
+        System.out.println("\nSaksham Dewan - 1BF24CS265\n");
         Scanner in = new Scanner(System.in);
 
         System.out.print("Enter value of coefficient a - ");
