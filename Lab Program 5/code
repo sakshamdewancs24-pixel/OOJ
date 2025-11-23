@@ -1,0 +1,178 @@
+import java.util.Scanner;
+class Account {
+     String custName;
+     String accNumber;
+     String accType;
+     double balance;
+
+     Account(String name, String accNo, String type, double initialBalance) {
+        this.custName = name;
+        this.accNumber = accNo;
+        this.accType = type;
+        this.balance = initialBalance;
+    }
+
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            System.out.println("Deposited: ₹" + amount);
+        } else {
+            System.out.println("Invalid deposit amount!");
+        }
+    }
+
+    public void displayBalance() {
+        System.out.println("Account Holder: " + custName);
+        System.out.println("Account Number: " + accNumber);
+        System.out.println("Account Type: " + accType);
+        System.out.println("Current Balance: ₹" + balance);
+    }
+}
+class SavAcct extends Account {
+     double interestRate = 0.05;
+
+    public SavAcct(String name, String accNo, double initialBalance) {
+        super(name, accNo, "Savings", initialBalance);
+    }
+
+    public void computeAndDepositInterest(int years) {
+        double interest = balance * Math.pow((1 + interestRate), years) - balance;
+        balance += interest;
+        System.out.printf("Interest of ₹%.2f added for %d years.%n", interest, years);
+    }
+
+    // Withdraw money
+    public void withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawal successful. Withdrawn: ₹" + amount);
+        } else {
+            System.out.println("Insufficient balance!");
+        }
+    }
+}
+
+class CurAcct extends Account {
+    private static final double MIN_BALANCE = 1000.0;
+    private static final double SERVICE_CHARGE = 100.0;
+
+    public CurAcct(String name, String accNo, double initialBal) {
+        super(name, accNo, "Current", initialBal);
+    }
+
+    public void withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawal successful. Withdrawn: ₹" + amount);
+            checkMinimumBalance();
+        } else {
+            System.out.println("Insufficient balance!");
+        }
+    }
+
+    public void checkMinimumBalance() {
+        if (balance < MIN_BALANCE) {
+            balance -= SERVICE_CHARGE;
+            System.out.println("Balance below ₹" + MIN_BALANCE + ". Service charge of ₹" + SERVICE_CHARGE + " imposed.");
+        }
+    }
+}
+public class Bank {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Welcome to the Bank System!");
+        System.out.print("Enter customer name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter account number: ");
+        String accNo = sc.nextLine();
+
+        System.out.print("Enter account type (savings/current): ");
+        String type = sc.nextLine().toLowerCase();
+
+        System.out.print("Enter initial balance: ");
+        double initialBalance = sc.nextDouble();
+
+        if (type.equals("savings")) {
+            SavAcct savAcc = new SavAcct(name, accNo, initialBalance);
+            int choice;
+            do {
+                System.out.println("\n--- Savings Account Menu ---");
+                System.out.println("1. Deposit");
+                System.out.println("2. Withdraw");
+                System.out.println("3. Compute Interest");
+                System.out.println("4. Display Balance");
+                System.out.println("5. Exit");
+                System.out.print("Enter choice: ");
+                choice = sc.nextInt();
+
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter deposit amount: ");
+                        savAcc.deposit(sc.nextDouble());
+                        break;
+                    case 2:
+                        System.out.print("Enter withdrawal amount: ");
+                        savAcc.withdraw(sc.nextDouble());
+                        break;
+                    case 3:
+                        System.out.print("Enter number of years: ");
+                        savAcc.computeAndDepositInterest(sc.nextInt());
+                        break;
+                    case 4:
+                        savAcc.displayBalance();
+                        break;
+                    case 5:
+                        System.out.println("Exiting...");
+                        break;
+                    default:
+                        System.out.println("Invalid choice!");
+                }
+            }
+             while (choice != 5);
+        } 
+        else if (type.equals("current")) {
+            CurAcct curAcc = new CurAcct(name, accNo, initialBalance);
+            int choice;
+            do {
+                System.out.println("\n--- Current Account Menu ---");
+                System.out.println("1. Deposit");
+                System.out.println("2. Withdraw");
+                System.out.println("3. Check Minimum Balance");
+                System.out.println("4. Display Balance");
+                System.out.println("5. Exit");
+                System.out.print("Enter choice: ");
+                choice = sc.nextInt();
+
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter deposit amount: ");
+                        curAcc.deposit(sc.nextDouble());
+                        break;
+                    case 2:
+                        System.out.print("Enter withdrawal amount: ");
+                        curAcc.withdraw(sc.nextDouble());
+                        break;
+                    case 3:
+                        curAcc.checkMinimumBalance();
+                        break;
+                    case 4:
+                        curAcc.displayBalance();
+                        break;
+                    case 5:
+                        System.out.println("Exiting...");
+                        break;
+                    default:
+                        System.out.println("Invalid choice!");
+                }
+            } while (choice != 5);
+        } 
+        else {
+            System.out.println("Invalid account type!");
+        }
+
+        sc.close();
+    }
+}
