@@ -42,7 +42,7 @@ class SavAcct extends Account {
         System.out.printf("Interest of ₹%.2f added for %d years.%n", interest, years);
     }
 
-    // Withdraw money
+ 
     public void withdraw(double amount) {
         if (amount <= balance) {
             balance -= amount;
